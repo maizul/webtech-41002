@@ -1,6 +1,6 @@
 <!DOCTYPE HTML>  
 <html>
-<head>
+<head> 
 <style>
 .error {color: #FF0000;}
 </style>
@@ -10,6 +10,8 @@
 <?php
 $nameErr = $emailErr = $dobErr = $genderErr = $usernameErr = $passwordErr = $cpasswordErr =   "";
 $name = $email = $dob = $gender = $username = $password = $cpassword = "";
+$message = '';  
+$error = '';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
   if (empty($_POST["name"])) {
@@ -39,9 +41,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $usernameErr = "User Name is required";
   } else { 
     if (str_word_count($_POST["username"]) ==1 && strlen($_POST["username"])>=2) {
-    	$username = test_input($_POST["username"]);
+      $username = test_input($_POST["username"]);
       if (!preg_match("/^[a-z0-9.-_]/i",$username)) {
-      	$usernameErr = "Only alpha numeric characters, period, dash or
+        $usernameErr = "Only alpha numeric characters, period, dash or
 underscore allowed";
       }
       }
@@ -56,20 +58,20 @@ underscore allowed";
     $cpassword = test_input($_POST["cpassword"]);
     if (strlen($_POST["password"]) < '8') {
         $passwordErr = "Your Password Must Contain At Least 8 Characters!";
-    	}
+      }
     elseif(!preg_match("@[0-9]+@",$password)) {
         $passwordErr = "Your Password Must Contain At Least 1 Number!";
-    	}
+      }
     elseif(!preg_match("@[A-Z]+@",$password)) {
         $passwordErr = "Your Password Must Contain At Least 1 Capital Letter!";
-    	}
+      }
     elseif(!preg_match("@[a-z]+@",$password)) {
         $passwordErr = "Your Password Must Contain At Least 1 Lowercase Letter!";
-    	}
+      }
     elseif(!preg_match("/^(?!.* )(?=.*[^a-zA-Z0-9]).{8,}$/m", $password)) {
           $passwordErr="Password should include at least one special character(@,#,$,%)";
         }
-	} 
+  } 
 else {
    $passwordErr = "Please enter password   ";
 }
@@ -85,7 +87,61 @@ else {
   } else {
     $dob = test_input($_POST["dob"]);
   }
+
+  if(isset($_POST["submit"])) {
+    if(empty($_POST["name"]))  
+      {  
+           $error = "<label class='text-danger'>Enter Name</label>";  
+      }  
+      else if(empty($_POST["email"]))  
+      {  
+           $error = "<label class='text-danger'>Enter Email</label>";  
+      }  
+      else if(empty($_POST["username"]))  
+      {  
+           $error = "<label class='text-danger'>Enter Username</label>";  
+      } 
+      else if(empty($_POST["password"]))  
+      {  
+           $error = "<label class='text-danger'>Enter Password</label>";  
+      }  
+      else if(empty($_POST["gender"]))  
+      {  
+           $error = "<label class='text-danger'>Enter Gender</label>";  
+      }  
+      else if(empty($_POST["dob"]))  
+      {  
+           $error = "<label class='text-danger'>Enter Date of Birth</label>";  
+      }   
+      else  
+      {  
+        if(file_exists('data_3.4.json'))  
+          {  
+            $current_data = file_get_contents('data_3.4.json');  
+            $array_data = json_decode($current_data, true);  
+            $extra = array(  
+                           'name'               =>     $_POST['name'],  
+                           'email'          =>     $_POST["email"],  
+                           'username'     =>     $_POST["username"],
+                           'password'     =>     $_POST["password"],
+                           'gender'     =>     $_POST["gender"],
+                           'dob'     =>     $_POST["dob"]
+                      );  
+            $array_data[] = $extra;  
+            $final_data = json_encode($array_data);  
+            if(file_put_contents('data_3.4.json', $final_data))  
+            {  
+              $message = "File Appended Success fully";  
+            }  
+          }  
+          else  
+              {  
+                $error = 'JSON File not exits';  
+              }
+  }
 }
+}
+
 function test_input($data) {
   $data = trim($data);
   $data = stripslashes($data);
@@ -96,7 +152,13 @@ function test_input($data) {
 
 <h2>LAB_TASK_3.4</h2>
 <p><span class="error">* required field</span></p>
-<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">  
+<form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+<?php   
+  if(isset($error))  
+  {  
+    echo $error;  
+  }  
+?>   
   Name: <input type="text" name="name">
   <span class="error">* <?php echo $nameErr;?></span>
   <br><br>
@@ -121,7 +183,13 @@ function test_input($data) {
   Date of Birth :
   <input type="date" name="dob" placeholder="DD-MM-YYYY" ><span class="error">* <?php echo $dobErr;?></span>
   <br><br>
-    <input type="submit" name="submit" value="Submit">  
+    <input type="submit" name="submit" value="Submit">
+    <?php  
+        if(isset($message))  
+          {  
+            echo $message;  
+          }  
+    ?>   
 </form>
 
 <?php
