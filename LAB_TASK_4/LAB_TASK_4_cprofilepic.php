@@ -1,5 +1,10 @@
 <?php
-	require("LAB_TASK_4_header2.php");
+session_start();
+	if (isset($_SESSION['uname'])){require 'LAB_TASK_4_header2.php';}
+else
+{
+  header("location:LAB_TASK_4_login.php");
+}
 	
 ?>
 <!DOCTYPE html>
