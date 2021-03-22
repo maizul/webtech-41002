@@ -14,7 +14,7 @@
 		    header('Location: LAB_TASK_5_display.php');
 		}
     	?>
-    <form method="POST">
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 
     <fieldset>
 	  <legend>Delete Product</legend>

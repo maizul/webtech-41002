@@ -7,7 +7,7 @@
   <body>
     <center>
     	<?php
-    	require 'LAB_TASK_5_menubar.php';
+    	require_once 'LAB_TASK_5_menubar.php';
     	require_once 'model.php';
     	if (isset($_POST['search'])) 
 		{
