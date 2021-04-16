@@ -1,5 +1,5 @@
 <?php
-    require("LAB_TASK_4_header.php");
+    require("../view/AMS_header.php");
 ?>
 
 <html>
@@ -8,11 +8,11 @@
 .error {color: #FF0000;}
 </style>
 </head>
-  <body>
+  <body style="background-color: #f2f3f4">
     <center>
 	<table align="left">
     <fieldset>
-    	<h1>Welcome to Public Homepage</h1>
+    	<h1>Welcome</h1>
 	</table>
     </fieldset>
 </form>
@@ -21,5 +21,5 @@
 </html>
 
 <?php
-    require("LAB_TASK_4_footer.php")
+    require("../view/AMS_footer.php")
 ?>
